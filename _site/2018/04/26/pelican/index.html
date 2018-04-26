@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>
+    
+      用Pelican+GithubPage搭建个人静态博客 &middot; Poole
+    
+  </title>
+
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/public/favicon.ico">
+  <link rel="alternate" type="application/atom+xml" title="Poole" href="/atom.xml">
+</head>
+
+
+  <body>
+
+    <div class="container content">
+      <header class="masthead">
+        <h3 class="masthead-title">
+          <a href="/" title="Home">Poole</a>
+          <small>The Jekyll Butler</small>
+        </h3>
+      </header>
+
+      <main>
+        <article class="post">
+  <h1 class="post-title">用Pelican+GithubPage搭建个人静态博客</h1>
+  <time datetime="2018-04-26T00:00:00+08:00" class="post-date">26 Apr 2018</time>
+  <h2 id="quick-start">Quick Start</h2>
+
+<p>###Create a repository
+Head over to GitHub and create a new repository named username.github.io, where username is your username (or organization name) on GitHub.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$virtualenv</span> pelican      <span class="c"># 创建</span>
+<span class="nv">$cd</span> pelican
+<span class="nv">$source</span> bin/activate     <span class="c">#激活虚拟环境</span>
+</code></pre></div></div>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">(</span>pelican<span class="o">)</span> <span class="nv">$pip</span> install pelican markdown 
+</code></pre></div></div>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">(</span>pelican<span class="o">)</span> <span class="nv">$mkdir</span> blog
+<span class="o">(</span>pelican<span class="o">)</span> <span class="nv">$cd</span> blog
+<span class="o">(</span>pelican<span class="o">)</span> <span class="nv">$pelican</span><span class="nt">-quickstart</span>
+</code></pre></div></div>
+<p>运行pelican-quickstart命令后会出现博客的配置项，除了少数几个必填以外，其它都可以选择默认，而且都可以在pelicanconf.py文件中进行更改，所以你可以随意选择。</p>
+
+<p>命令成功执行后，会出现pelican的框架，如下所示</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>blog/
+├── content                <span class="c"># 存放输入的markdown或RST源文件</span>
+│   └── <span class="o">(</span>pages<span class="o">)</span>            <span class="c"># 存放手工创建的静态页面，可选</span>
+├── output                 <span class="c"># 存放最终生成的静态博客</span>
+├── develop_server.sh      <span class="c"># 测试服务器</span>
+├── Makefile               <span class="c"># 管理博客的Makefile</span>
+├── pelicanconf.py         <span class="c"># 配置文件</span>
+└── publishconf.py         <span class="c"># 发布文件，可删除</span>
+</code></pre></div></div>
+
+<p>完成上述博客主体搭建后，创建一个.md文件，保存于content文件夹中。博文格式如下所示：</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Title: My super title
+Date: 2010-12-03 10:20
+Category: Python
+Tags: pelican, publishing
+Slug: my-super-post
+Author: Alexis Metaireau
+Summary: Short version <span class="k">for </span>index and feeds
+
+This is the content of my super blog post. <span class="c">#正文内容</span>
+</code></pre></div></div>
+
+<p>更新主题：</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">(</span>pelican<span class="o">)</span> <span class="nv">$git</span> clone https://github.com/getpelican/pelican-themes.git
+<span class="o">(</span>pelican<span class="o">)</span> <span class="nv">$cd</span> pelican-themes
+<span class="o">(</span>pelican<span class="o">)</span> <span class="nv">$pelican</span><span class="nt">-themes</span> <span class="nt">-i</span> medius<span class="o">(</span>你选择的主题名字<span class="o">)</span>
+回到blog目录下，在pelicanconf.py里面添加 THEME <span class="o">=</span> <span class="s1">'medius'</span>
+</code></pre></div></div>
+<p>写完后，回到blog目录下，执行make html命令进行博客的生成</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">(</span>pelican<span class="o">)</span> <span class="nv">$make</span> html
+</code></pre></div></div>
+<p>###发布博客到github</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">(</span>pelican<span class="o">)</span> <span class="nv">$cd</span> output
+<span class="o">(</span>pelican<span class="o">)</span> <span class="nv">$git</span> init
+<span class="o">(</span>pelican<span class="o">)</span> <span class="nv">$git</span> remote add origin https://github.com/username/username.github.io.git
+<span class="o">(</span>pelican<span class="o">)</span> <span class="nv">$git</span> pull
+<span class="o">(</span>pelican<span class="o">)</span> <span class="nv">$git</span> add <span class="nb">.</span>
+<span class="o">(</span>pelican<span class="o">)</span> <span class="nv">$git</span> commit <span class="nt">-m</span> <span class="s2">"update"</span>
+<span class="o">(</span>pelican<span class="o">)</span> <span class="nv">$git</span> push <span class="nt">-u</span> origin master <span class="nt">-f</span>
+</code></pre></div></div>
+<p>至此打开https://username.github.io/就能看到效果啦.</p>
+
+
+</article>
+
+
+<aside class="related">
+  <h3>Related posts</h3>
+  <ul class="related-posts">
+    
+      <li>
+        <a href="/2016/01/03/introduction/">
+          Introduction
+          <small><time datetime="2016-01-03T00:00:00+08:00">03 Jan 2016</time></small>
+        </a>
+      </li>
+    
+      <li>
+        <a href="/2016/01/02/example-content/">
+          Example content
+          <small><time datetime="2016-01-02T00:00:00+08:00">02 Jan 2016</time></small>
+        </a>
+      </li>
+    
+      <li>
+        <a href="/2016/01/01/whats-jekyll/">
+          What's Jekyll?
+          <small><time datetime="2016-01-01T00:00:00+08:00">01 Jan 2016</time></small>
+        </a>
+      </li>
+    
+  </ul>
+</aside>
+
+
+      </main>
+
+      <footer class="footer">
+        <small>
+          &copy; <time datetime="2018-04-26T13:23:52+08:00">2018</time>. All rights reserved.
+        </small>
+      </footer>
+    </div>
+
+    
+  </body>
+</html>

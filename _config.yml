@@ -1,0 +1,32 @@
+# Permalinks
+permalink:           pretty
+
+# Setup
+title:               Syndra's Blog
+tagline:             Sometimes i turn, there's someone there, other times it's only me.
+url:                 http://wenmore.github.io
+paginate:            1
+baseurl:             ""
+
+# Assets
+#
+# We specify the directory for Jekyll so we can use @imports.
+sass:
+  sass_dir:          _sass
+  style:            :compressed
+
+# About/contact
+author:
+  name:              Mabel Wen
+  url:               https://wenmore.github.io/
+  email:             hudie.luoluo@gmail.com
+
+# Custom vars
+version:             2.0.0
+github:
+  repo:              https://github.com/wenmore/wenmore.github.io
+
+# Gems
+gems:
+  - jekyll-paginate
+  - jekyll-gist
