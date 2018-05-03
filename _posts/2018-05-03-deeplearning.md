@@ -5,7 +5,7 @@ key: 20180503
 tags: deep learning
 ---
 
-from： [github]: https://github.com/tvganesh/awesome-deep-learning
+from： [github]: (https://github.com/tvganesh/awesome-deep-learning)
 
 # Awesome Deep Learning [![Awesome](https://cdn.rawgit.com/sindresorhus/awesome/d7305f38d29fed78fa85652e3a63e154dd8e8829/media/badge.svg)](https://github.com/sindresorhus/awesome)
 
