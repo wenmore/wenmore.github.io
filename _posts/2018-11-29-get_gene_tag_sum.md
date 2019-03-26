@@ -1,0 +1,659 @@
+---
+layout: post
+title: pandas笔记（二）
+key: 20181129
+tags: pandas
+---
+
+```python
+import pandas as pd
+from collections import defaultdict
+from pandas import Series,DataFrame
+gene_id = []
+count = []
+data = pd.read_table('T_cell_minus_peak_mode_noarich_map2_3utr_and_extend.bed', header = None)
+```
+<!--more-->
+
+```python
+data = data[[3,10]]
+```
+
+
+```python
+data
+```
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>3</th>
+      <th>10</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>NM_000014.5</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>NM_000022.3</td>
+      <td>41</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>NM_000022.3</td>
+      <td>1657</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>NM_000027.3</td>
+      <td>42</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>NM_000027.3</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>NM_000027.3</td>
+      <td>58</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>NM_000027.3</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>NM_000027.3</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>NM_000027.3</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>NM_000027.3</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>NM_000027.3</td>
+      <td>968</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>NM_000031.5</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>NM_000031.5</td>
+      <td>541</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>NM_000031.5</td>
+      <td>14</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>NM_000031.5</td>
+      <td>9</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>NM_000031.5</td>
+      <td>117</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>NM_000032.4</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>NM_000032.4</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>NM_000032.4</td>
+      <td>7</td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>NM_000037.3</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>20</th>
+      <td>NM_000039.2</td>
+      <td>49</td>
+    </tr>
+    <tr>
+      <th>21</th>
+      <td>NM_000046.3</td>
+      <td>21</td>
+    </tr>
+    <tr>
+      <th>22</th>
+      <td>NM_000046.3</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>23</th>
+      <td>NM_000046.3</td>
+      <td>87</td>
+    </tr>
+    <tr>
+      <th>24</th>
+      <td>NM_000046.3</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>25</th>
+      <td>NM_000046.3</td>
+      <td>11</td>
+    </tr>
+    <tr>
+      <th>26</th>
+      <td>NM_000053.3</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>27</th>
+      <td>NM_000053.3</td>
+      <td>28</td>
+    </tr>
+    <tr>
+      <th>28</th>
+      <td>NM_000061.2</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>29</th>
+      <td>NM_000061.2</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>104078</th>
+      <td>NM_213649.1</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>104079</th>
+      <td>NM_213651.2</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>104080</th>
+      <td>NM_213651.2</td>
+      <td>18</td>
+    </tr>
+    <tr>
+      <th>104081</th>
+      <td>NM_213651.2</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>104082</th>
+      <td>NM_213651.2</td>
+      <td>342</td>
+    </tr>
+    <tr>
+      <th>104083</th>
+      <td>NM_213651.2</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>104084</th>
+      <td>NM_213651.2</td>
+      <td>14</td>
+    </tr>
+    <tr>
+      <th>104085</th>
+      <td>NM_213651.2</td>
+      <td>7</td>
+    </tr>
+    <tr>
+      <th>104086</th>
+      <td>NM_213651.2</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>104087</th>
+      <td>NM_213651.2</td>
+      <td>7</td>
+    </tr>
+    <tr>
+      <th>104088</th>
+      <td>NM_213651.2</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>104089</th>
+      <td>NM_213651.2</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>104090</th>
+      <td>NM_213662.1</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <th>104091</th>
+      <td>NM_213662.1</td>
+      <td>8</td>
+    </tr>
+    <tr>
+      <th>104092</th>
+      <td>NM_213662.1</td>
+      <td>16</td>
+    </tr>
+    <tr>
+      <th>104093</th>
+      <td>NM_213662.1</td>
+      <td>246</td>
+    </tr>
+    <tr>
+      <th>104094</th>
+      <td>NM_213662.1</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>104095</th>
+      <td>NM_213662.1</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>104096</th>
+      <td>NM_213662.1</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>104097</th>
+      <td>NM_213662.1</td>
+      <td>105</td>
+    </tr>
+    <tr>
+      <th>104098</th>
+      <td>NM_213662.1</td>
+      <td>1400</td>
+    </tr>
+    <tr>
+      <th>104099</th>
+      <td>NM_213662.1</td>
+      <td>8</td>
+    </tr>
+    <tr>
+      <th>104100</th>
+      <td>NM_213662.1</td>
+      <td>19</td>
+    </tr>
+    <tr>
+      <th>104101</th>
+      <td>NM_213674.1</td>
+      <td>1430</td>
+    </tr>
+    <tr>
+      <th>104102</th>
+      <td>NM_213720.2</td>
+      <td>7624</td>
+    </tr>
+    <tr>
+      <th>104103</th>
+      <td>NM_213726.2</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>104104</th>
+      <td>NM_213726.2</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>104105</th>
+      <td>NM_213726.2</td>
+      <td>14</td>
+    </tr>
+    <tr>
+      <th>104106</th>
+      <td>NM_214461.2</td>
+      <td>19</td>
+    </tr>
+    <tr>
+      <th>104107</th>
+      <td>NM_214710.4</td>
+      <td>40</td>
+    </tr>
+  </tbody>
+</table>
+<p>104108 rows × 2 columns</p>
+</div>
+
+
+
+
+```python
+a = data.groupby([3])[[10]].sum()
+data.groupby([3])[[10]].sum().to_csv('minus_gene_tag_sum',header= False,sep='\t')
+```
+
+
+```python
+a
+```
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>10</th>
+    </tr>
+    <tr>
+      <th>3</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>NM_000014.5</th>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>NM_000022.3</th>
+      <td>1698</td>
+    </tr>
+    <tr>
+      <th>NM_000027.3</th>
+      <td>1083</td>
+    </tr>
+    <tr>
+      <th>NM_000031.5</th>
+      <td>687</td>
+    </tr>
+    <tr>
+      <th>NM_000032.4</th>
+      <td>14</td>
+    </tr>
+    <tr>
+      <th>NM_000037.3</th>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>NM_000039.2</th>
+      <td>49</td>
+    </tr>
+    <tr>
+      <th>NM_000046.3</th>
+      <td>126</td>
+    </tr>
+    <tr>
+      <th>NM_000053.3</th>
+      <td>30</td>
+    </tr>
+    <tr>
+      <th>NM_000061.2</th>
+      <td>105</td>
+    </tr>
+    <tr>
+      <th>NM_000064.3</th>
+      <td>47</td>
+    </tr>
+    <tr>
+      <th>NM_000071.2</th>
+      <td>439</td>
+    </tr>
+    <tr>
+      <th>NM_000075.3</th>
+      <td>11567</td>
+    </tr>
+    <tr>
+      <th>NM_000076.2</th>
+      <td>100</td>
+    </tr>
+    <tr>
+      <th>NM_000077.4</th>
+      <td>246</td>
+    </tr>
+    <tr>
+      <th>NM_000080.3</th>
+      <td>55</td>
+    </tr>
+    <tr>
+      <th>NM_000081.3</th>
+      <td>546</td>
+    </tr>
+    <tr>
+      <th>NM_000082.3</th>
+      <td>362</td>
+    </tr>
+    <tr>
+      <th>NM_000086.2</th>
+      <td>3185</td>
+    </tr>
+    <tr>
+      <th>NM_000087.3</th>
+      <td>6</td>
+    </tr>
+    <tr>
+      <th>NM_000088.3</th>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>NM_000094.3</th>
+      <td>21</td>
+    </tr>
+    <tr>
+      <th>NM_000097.5</th>
+      <td>3236</td>
+    </tr>
+    <tr>
+      <th>NM_000099.3</th>
+      <td>986</td>
+    </tr>
+    <tr>
+      <th>NM_000100.3</th>
+      <td>8779</td>
+    </tr>
+    <tr>
+      <th>NM_000101.3</th>
+      <td>6789</td>
+    </tr>
+    <tr>
+      <th>NM_000104.3</th>
+      <td>377</td>
+    </tr>
+    <tr>
+      <th>NM_000106.5</th>
+      <td>260</td>
+    </tr>
+    <tr>
+      <th>NM_000109.3</th>
+      <td>8</td>
+    </tr>
+    <tr>
+      <th>NM_000110.3</th>
+      <td>432</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>NM_207521.1</th>
+      <td>4952</td>
+    </tr>
+    <tr>
+      <th>NM_207644.2</th>
+      <td>27</td>
+    </tr>
+    <tr>
+      <th>NM_212469.1</th>
+      <td>162</td>
+    </tr>
+    <tr>
+      <th>NM_212540.2</th>
+      <td>1221</td>
+    </tr>
+    <tr>
+      <th>NM_212543.1</th>
+      <td>76</td>
+    </tr>
+    <tr>
+      <th>NM_212551.4</th>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>NM_212552.2</th>
+      <td>4498</td>
+    </tr>
+    <tr>
+      <th>NM_212554.3</th>
+      <td>552</td>
+    </tr>
+    <tr>
+      <th>NM_213566.1</th>
+      <td>1886</td>
+    </tr>
+    <tr>
+      <th>NM_213569.2</th>
+      <td>7</td>
+    </tr>
+    <tr>
+      <th>NM_213589.2</th>
+      <td>169</td>
+    </tr>
+    <tr>
+      <th>NM_213597.3</th>
+      <td>62</td>
+    </tr>
+    <tr>
+      <th>NM_213601.2</th>
+      <td>1182</td>
+    </tr>
+    <tr>
+      <th>NM_213604.2</th>
+      <td>238</td>
+    </tr>
+    <tr>
+      <th>NM_213613.3</th>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>NM_213618.1</th>
+      <td>10</td>
+    </tr>
+    <tr>
+      <th>NM_213619.2</th>
+      <td>1021</td>
+    </tr>
+    <tr>
+      <th>NM_213620.2</th>
+      <td>1021</td>
+    </tr>
+    <tr>
+      <th>NM_213631.2</th>
+      <td>17</td>
+    </tr>
+    <tr>
+      <th>NM_213632.2</th>
+      <td>17</td>
+    </tr>
+    <tr>
+      <th>NM_213645.1</th>
+      <td>28485</td>
+    </tr>
+    <tr>
+      <th>NM_213646.1</th>
+      <td>28485</td>
+    </tr>
+    <tr>
+      <th>NM_213649.1</th>
+      <td>3447</td>
+    </tr>
+    <tr>
+      <th>NM_213651.2</th>
+      <td>406</td>
+    </tr>
+    <tr>
+      <th>NM_213662.1</th>
+      <td>1819</td>
+    </tr>
+    <tr>
+      <th>NM_213674.1</th>
+      <td>1430</td>
+    </tr>
+    <tr>
+      <th>NM_213720.2</th>
+      <td>7624</td>
+    </tr>
+    <tr>
+      <th>NM_213726.2</th>
+      <td>19</td>
+    </tr>
+    <tr>
+      <th>NM_214461.2</th>
+      <td>19</td>
+    </tr>
+    <tr>
+      <th>NM_214710.4</th>
+      <td>40</td>
+    </tr>
+  </tbody>
+</table>
+<p>16067 rows × 1 columns</p>
+</div>
+
+
+
+
+```python
+
+```

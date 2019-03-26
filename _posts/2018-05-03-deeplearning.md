@@ -1,11 +1,11 @@
 ---
 layout: post
-title: 深度学习笔记
+title: 深度学习礼摘
 key: 20180503
-tags: deep learning
+tags: deep&nbsp;learning
 ---
 
-from： [github](https://github.com/tvganesh/awesome-deep-learning)
+from： [github]: [https://github.com/tvganesh/awesome-deep-learning](https://github.com/tvganesh/awesome-deep-learning)
 
 # Awesome Deep Learning [![Awesome](https://cdn.rawgit.com/sindresorhus/awesome/d7305f38d29fed78fa85652e3a63e154dd8e8829/media/badge.svg)](https://github.com/sindresorhus/awesome)
 
@@ -28,6 +28,8 @@ from： [github](https://github.com/tvganesh/awesome-deep-learning)
 * **[Datasets](#datasets)**
 
 * **[Conferences](#Conferences)**
+
+<!--more-->
 
 * **[Frameworks](#frameworks)**  
 
